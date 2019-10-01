@@ -1,0 +1,11 @@
+*config.py
+*.pyc
+*.docx
+*.xlsm
+*.pdf
+*checkpoint*
+*.pdf
+t.py
+*.csv
+test.py
+TODO

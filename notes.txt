@@ -1,0 +1,109 @@
+Random collection of notes:
+
+numpy's dot function:
+	- multiplication of two equal-length sequences (https://en.wikipedia.org/wiki/Dot_product)
+	- a*b = sum a1*b1 + a2*b2 + ... + an*bn
+	- [1,2,-5]*[4,-2,-1] = (1*4)+(3*-2)+-5*-1) = 4 - 6 + 5 = 3
+	- above could be written as a*b = a*bT  (T is transpose, a vertical*horizontal matrix)
+	- a = |1, 0|
+		  |0, 1|
+	- b = |4, 1|
+		  |2, 2|
+	- np.dot(a, b) =
+		  (row 1 of a * col 1 of b) -> (1*4 + 0*2) = 4
+  		+ (row 1 of a * col 2 of b) -> (1*1 + 0*2) = 1
+		+ (row 2 of a * col 1 of b) -> (0*4 + 1*2) = 2
+		+ (row 2 of a * col 2 of b) -> (0*1 + 1*2) = 2
+		= |4, 1|
+		  |2, 2|
+
+
+Bias vs variance: trying to find the sweet spot, decrease both.
+- Bias is how well the model fits the training set, i.e. a straight line
+has high bias and does not fit as well as a curved line.
+- Variance is how well the model fits test data, i.e. how well
+it consistently predicts outside of training data.
+A straight line has high bias but low varianc, because it consistently
+predicts test data, i.e. not so great. A squiggly line has low bias but
+high variance, because it takes into acccount all training data
+but does not consistently test well against outside data.
+-https://towardsdatascience.com/ridge-regression-for-better-usage-2f19b3a202db
+
+Regularization, Boosting and bagging are methods of finding
+sweet spot between simple and complex models.
+- https://www.youtube.com/watch?v=EuBBz3bI-aA
+
+Vector Norms (https://machinelearningmastery.com/vector-norms-machine-learning/):
+1. Vector norm = length of vector (aka vector magnitude)
+	= nonnegative value describing extent of vector in space
+2. L1 norm: length of vector, 1 is superscript of L, L^1
+	= |v|1  - the absolute value of v
+	- sometimes called Manhatten distance (taxicab norm)
+	- distance from the origin of vector
+	- |v|1 = |a1| + |a2| + |a3|
+	- in numpy:
+		from numpy import array
+		from numpy.linalg import norm
+		a = array([1,2,3])
+		print(a) # prints [1,2,3]
+		l1 = norm(a,1)
+		print(l1) # prints 6.0, the l1 norm
+	- used in ML as regularization method, to keep coefficients of model small and model less complex
+3. L2 norm: length of vector using L^2
+	= |v|2, where 2 is subscript
+	- distance of vector from origin of vector; known as Euclidean norm (uses Euclidean distance)
+	- square root of sum of squares
+	- i.e.: |v|2 = sqrt(a1^2 + a2^2 + a3^2)
+	ex:
+		from numpy impot array
+		from numpy.linalg import norm
+		a = array([1,2,3])
+		l2 = norm(a)  # notice missing second parameter of 1
+	- like l1, l2 norm used ML for regularization, keeping coefficients small and less complex
+4. Vector Max Norm
+	- also length of vector
+	- L^inf (inf is infinity)
+	- calculated as maximum value of vector:
+		|v|inf = max(|a1|, |a2|, |a3|)  # inf is subscript; returns max...
+		ex:
+			from numpy import inf
+			from numpy import array
+			from numpy.linalg import norm
+			a = array([1,2,3])
+			maxnorm = norm(a, inf)  # maxnorm would be equal to 3
+	- useful in neural nets (called max norm regularization)
+
+L1 vs L2:
+L1 is more robust, meaning it is more resistant to outliers in the data (useful when outliers need to be ignored)
+	- if outliers should not be ignored, L2 is preferable (i.e. least squares)
+	- why? L2 squares the error, so any error > 1 will show up as a larger error than L1 (since squared)
+	- so L2 is more sensitive to outliers and will adjust accordingly to minimize error (at expense of many other common examples)
+	- see here: http://www.chioka.in/differences-between-l1-and-l2-as-loss-function-and-regularization/
+	- on stability: lease absolute deviation (L1), for small adjustment, regression line may jump a lot
+		- could "jump past" an optimal solution, with a new line that greatly deviates in slope from previous
+		- least squares (L2) is more stable, for any adjustment, regression line will move slightly
+
+Regularization: prevent coefficients overfitting data by adding regularization term
+	- L1 is sum of weights, L2 is sum of square of weights
+	- L2 is for non-sparse outputs with no feature selection
+	- visually (see link above), an L2 norm will have one solution, whereas an L1 norm can have multiple
+	solutions, all the same length (i.e. different "paths")
+	- L1 is useful becuase it has built-in feature selection (produces sparse coefficients)
+		- with 100 coefficients, say, only 10 have non-zero coefficients (other 90 are useless)
+		- L2 norm produces non-sparse coefficients
+		- L1 can produce many coefficients with zero values, so effectively builds in feature selection
+
+Cross Validation: for tuning and finding correct model; typically use Ten-Fold Cross Validation;
+	Leave one out would only leave one out per test run
+
+Confusion Matrix: Shows what ML model predicted, what was actual, True positives, False positives, true negatives, false negatives
+	- size determined # things trying to predict
+
+Sensitivity = True positives/(true positives + false negatives) 
+	this yields a percentage of correct positive predictions, where 1.0 is 100% correct
+	- so tells how good at identifying positives
+
+Specificity = True Negatives/(true negatives + false positives)
+	yields percentage of correct negative predictions; how good at prediciting negatives
+
+For more than 2 outcomes in a confusion matrix, i.e. 3x3, you are comparing the true positive for first column aginst the false negative (total value) for the other two values in the same column; for specifity you use other columns..
