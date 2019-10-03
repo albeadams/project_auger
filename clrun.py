@@ -9,7 +9,6 @@ DATADIR = os.path.join(os.getcwd(), 'data\\')
 LOOKUPDIR = os.path.join(os.getcwd(), 'lookup\\')
 LEARNERDICT = {}
 
-
 def main():
   greeting()
   chosen_dataset = getdatasets_input()
@@ -19,7 +18,7 @@ def main():
   print('    ' + dataset)
   print("\n  Chosen learners: ")
   print('    ' +str(learners))
-  ra = setup.RunAuger(dataset, learners)
+  ra = setup.RunAuger(DATADIR, dataset, learners)
   ra.stage()
 
 def greeting():
@@ -40,17 +39,6 @@ def greeting():
     Without further ado, here are the datasets!!!\n""")
 
 
-def showdatasets():
-  index = 1
-  for csv in listdir(DATADIR):
-    file, ext = os.path.splitext(os.getcwd() + csv)
-    if ext == '.csv':
-      print('    ' +str(index) + '. ' +csv)
-      index = index + 1
-  print()
-  return index
-
-
 def getdatasets_input():
   print("  Choose a dataset\n")
   total_datasets = showdatasets()
@@ -66,6 +54,17 @@ def getdatasets_input():
       print("Not a number, try again.")
   print("\n  You chose: " + get_dataset_name(choice) + "\n\n  Awesome choice!\n")
   return choice
+
+
+def showdatasets():
+  index = 1
+  for csv in listdir(DATADIR):
+    file, ext = os.path.splitext(os.getcwd() + csv)
+    if ext == '.csv':
+      print('    ' +str(index) + '. ' +csv)
+      index = index + 1
+  print()
+  return index-1
 
 
 def getlearner_input():

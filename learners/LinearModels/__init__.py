@@ -1,8 +1,7 @@
-from .LinReg import *
-# from .ANN import *
-# from .Boosting import *
-# from .DT import *
-# from .KNN import *
-# from .SVM import *
-
-__all__ = ['LinReg'] #['ANN', 'Boosting', 'DT', 'KNN', 'SVM']
+from .LinearRegression import *
+from .BayesianRidgeRegression import *
+from .ElasticNetRegression import *
+from .LassoRegression import *
+from .LogisticRegression import *
+from .RidgeRegression import *
+from .info import *

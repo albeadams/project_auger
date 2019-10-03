@@ -1,5 +1,3 @@
-import info
-
 from sklearn import linear_model
 
 class BayesianRidgeRegression(object):
@@ -15,7 +13,7 @@ class BayesianRidgeRegression(object):
     fit_intercept=True,
     normalize=False,
     copy_X=True,
-    verbose=False)
+    verbose=False):
 
     self.learner = linear_model.BayesRidge(
       n_iter=n_iter,

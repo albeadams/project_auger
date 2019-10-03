@@ -1,5 +1,3 @@
-import info
-
 from sklearn import linear_model
 
 class RidgeRegression(object):

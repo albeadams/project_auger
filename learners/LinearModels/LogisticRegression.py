@@ -1,5 +1,3 @@
-import info
-
 from sklearn import linear_model
 
 class LogisticRegression(object):
@@ -19,7 +17,7 @@ class LogisticRegression(object):
     verbose=0,
     warm_start=False,
     n_jobs=None,
-    l1_ratio=None)
+    l1_ratio=None):
 
     self.learner = linear_model.LogisticRegression(
       penalty='l2',

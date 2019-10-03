@@ -444,5 +444,5 @@ linearinfo = linparams + linresult + linexample + linmethods + linnotes
 ridgeinfo = rdgparams + rdgresult + rdgexample + rdgmethods + rdgnotes
 lassoinfo = lassoparams + lassoresult + lassoexample + lassomethods + lassonotes
 elasticinfo = elasticparams + elasticresult + elasticexample + elasticmethods + elasticnotes
-bayesinfo = bayesparams + bayesresult + bayesexamples + bayesmethods + bayesnotes
-loginfo = logparams + logresult + logexamples + logmethods + lognotes
+bayesinfo = bayesparams + bayesresult + bayesexample + bayesmethods + bayesnotes
+loginfo = logparams + logresult + logexample + logmethods + lognotes
