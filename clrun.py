@@ -18,6 +18,7 @@ def main():
   print('    ' + dataset)
   print("\n  Chosen learners: ")
   print('    ' +str(learners))
+  print('\n  At any time, type \'help\' to get help\n')
   ra = setup.RunAuger(DATADIR, dataset, learners)
   ra.stage()
 

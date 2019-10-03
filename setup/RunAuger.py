@@ -1,6 +1,7 @@
 import learners
 from setup import DataMatrix as datamatrix
 from setup import ProcessData as procdata
+from setup import Input as inp
 
 class RunAuger(object):
 
@@ -13,7 +14,7 @@ class RunAuger(object):
     # DataMatrix will store headers if present;
     self.dm = datamatrix.DataMatrix(self.directory + self.dataset)
     while True:
-      hh = input("\n  Does your data have column headers? (y or n): ")
+      hh = inp.get_input("\n  Does your data have column headers? (y or n): ")
       if hh == 'y' or hh == 'n':
         if hh == 'y':
           self.dm.set_header()
@@ -39,7 +40,7 @@ class RunAuger(object):
       3. Replace missing values with... (to come) [min, max, avg,ffill, bfill]\n""")
 
       while True:
-        choice = input("  Your choice: ")
+        choice = inp.get_input("  Your choice: ")
         if not (choice > 3 or choice < 1):
           break
 
