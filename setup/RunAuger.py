@@ -2,6 +2,7 @@ import learners
 from setup import DataMatrix as datamatrix
 from setup import ProcessData as procdata
 from setup import Input as inp
+from setup import info
 
 class RunAuger(object):
 
@@ -9,12 +10,12 @@ class RunAuger(object):
     self.directory = directory
     self.dataset = dataset
     self.learner = learner
-    self.h = learners.Help()
-
+    self.inp = inp.Input()
+    self.process = procdata.ProcessData()
     # DataMatrix will store headers if present;
     self.dm = datamatrix.DataMatrix(self.directory + self.dataset)
     while True:
-      hh = inp.get_input("\n  Does your data have column headers? (y or n): ")
+      hh = self.inp.get_input("\n  Does your data have column headers? (y or n): ")
       if hh == 'y' or hh == 'n':
         if hh == 'y':
           self.dm.set_header()
@@ -23,42 +24,30 @@ class RunAuger(object):
         print("\n  Try again. Enter y for yes, n for no.")
 
 
+
   ### represents programs 'main' after dataset and learner(s) chosen ###
   def stage(self):
-    self.process = procdata.ProcessData(self.dm)
-
-    # if dataset has ?, replace with np.nan
-    self.process.replace_question_marks()
+    # split the dataframe in process, store it in datamatrxix
+    train_set, test_set = self.process.easy_split(self.dm.get_dataframe())
+    self.dm.store_train_test_data(train_set, test_set)
 
     # choose how to replace nan values
-    if self.process.check_for_nulls():
-      print("""\n  
-  Your data has missing values.
-  Here are your options on how to handle this:\n
-      1. Remove offending row
-      2. Remove offending column
-      3. Replace missing values with... (to come) [min, max, avg,ffill, bfill]\n""")
-
+    if self.process.check_for_nulls(self.dm.get_train_set()):
+      print(info.missingvalues)
       while True:
-        choice = inp.get_input("  Your choice: ")
+        choice = self.inp.get_input("  Your choice: ")
         if not (choice > 3 or choice < 1):
           break
 
       if choice == 3:
-        print("""\n
-  You chose to replace the missing values. There are several options:
+        print(info.replacewithoptions)
 
-    1. Replace with min
-    2. Replace with max
-    3. Replace with average
-    4. Forward fill
-    5. Backward fill
-    6. Interpolate???
+      # get the train set, pass it and choice to fix_nulls, which returns the fixed df
+      # and the result of the computation, i.e. if max was the choice, the result would return
+      # this numeric value
+      self.dm.store_missing_value(self.process.fix_nulls(self.dm.get_train_set(), choice), result)
+    else:
+      print(info.nomissingfound)
+      self.dm.store_missing_value(self.dm.get_train_set(), 0) # correct format for result?
 
-    [HERE - https://pandas.pydata.org/pandas-docs/stable/user_guide/missing_data.html
-      also note hands on... need to store whatever this is for use in test and later data...
-      need to go back and split the data into test and train data before this, obtain 
-      this fill value only from test]
 
-          \n""")
-      self.process.fix_nulls(choice)

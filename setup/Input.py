@@ -11,7 +11,6 @@ class Input(object):
     pass
 
   def get_input(self, inpstr=None):
-
     while True:
       response = input(inpstr)
       if not response.split(' ')[0] == 'help':
@@ -19,8 +18,8 @@ class Input(object):
       else:
         self.help_me(response)
 
-  def help_me(response):
-    
+
+  def help_me(self, response):
     if len(reponse.split(' ')) > 1:
       self.parse_help(response)
 
@@ -48,13 +47,13 @@ class Input(object):
         help learners --list
 
       Other help functionality will be added in the future.\n""")
-
     while True:
       response = input("Enter help request, or type 'x' to continue: ")
       if response == 'x':
         return
       parse_help(response)
 
-  def parse_help(response):
+
+  def parse_help(self, response):
     #TODO: parse request and grab info from info.py or whereever
     pass
