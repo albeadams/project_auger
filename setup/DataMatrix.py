@@ -3,8 +3,10 @@ import numpy as np
 
 class DataMatrix(object):
 
-  def __init__(self, datafile=None):
-    self.df = pd.read_csv(datafile, sep=',', na_values=['?'])
+  def __init__(self, directory=None, datafile=None):
+    self.directory = directory
+    self.datafile = datafile
+    self.df = pd.read_csv(directory+datafile, sep=',', na_values=['?'])
     self.header = None
 
   def store_train_test_data(self, train_set=None, test_set=None):
@@ -28,8 +30,11 @@ class DataMatrix(object):
   def set_dataframe(self, df):
     self.df = df
 
-  def set_header(self):
-    self.header = self.df.columns.values
+  def set_header(self, hasheader=True):
+    if hasheader:
+      self.header = self.df.columns.values
+    else:
+      self.header = None
 
   # important to note - this returns copy of training set
   def get_train_set(self):

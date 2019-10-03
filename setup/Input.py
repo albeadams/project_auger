@@ -10,7 +10,11 @@ class Input(object):
   def __init__(self):
     pass
 
+  def print_out(self, outstr=None, end=None):
+    print('  ' + outstr, end=end)
+
   def get_input(self, inpstr=None):
+    inpstr = '  '+inpstr
     while True:
       response = input(inpstr)
       if not response.split(' ')[0] == 'help':
