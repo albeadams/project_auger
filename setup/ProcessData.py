@@ -5,6 +5,8 @@ from pandas.api.types import is_numeric_dtype
 from sklearn.model_selection import train_test_split
 
 from setup import DataMatrix as datamatrix
+from setup import Input as inpt
+from setup import info
 
 class ProcessData(object):
 
@@ -12,9 +14,61 @@ class ProcessData(object):
     pass
 
 
+  def prep_training_data(self, dm=None):
+    inp = inpt.Input()
+    # checks if any columns not numeric, exit if so; will build in process options for this later
+    if self.has_nonnumber_type(dm):
+      inp.print_out("Your data has non-numerical data.")
+      inp.print_out("Please provide only numerical data.")
+      exit()
+
+    while True:
+      hh = inp.get_input("Does your data have column headers? (y or n): ")
+      if hh == 'y':
+        dm.header = dm.df.columns.values
+        break
+      elif hh == 'n':
+        break
+      else:
+        inp.print_out("Try again. Enter y for yes, n for no.")
+
+    # split the dataframe in process, store it in datamatrxix
+    dm.train_set, dm.test_set = self.easy_split(dm.df)
+    dm.train_copy = dm.train_set.copy()
+    # choose how to replace nan values
+    if self.check_for_nulls(dm.train_copy):
+      print(info.list_missing_values_options)
+      while True:
+        try:
+          choice = inp.get_input("Your choice: ")
+          if not (int(choice) > 13 or int(choice) < 1):
+            break
+          else:
+            inp.print_out("Try again. ", end='')
+        except ValueError:
+          inp.print_out("Not a number, try again.")
+
+      dm.choice = choice
+      # get the train set, pass it and choice to fix_nulls, which returns the fixed df
+      # and the result of the computation, i.e. if max was the choice, the result would return
+      # this numeric value; training=True created the replace_df and returns; training=False requires
+      # the replace_df to be included in the call for certain choices, doesn't return a replace_df
+      res = dm.train_copy, dm.replace_df  = self.fix_nulls(dm.train_copy, dm.choice, training=True)
+      if res == -1: 
+        print("Error in fixing training nulls")
+        exit() # shouldn't occur
+    else:
+      print(info.no_missing_found)
+      dm.choice = 3 # all future set to 0 - change: should be able to specify
+    
+    # HERE ... other processing???
+
+    return dm
+
+
   # returns True if a column contains a non-numeric type
   # https://stackoverflow.com/questions/22697773/how-to-check-the-dtype-of-a-column-in-python-pandas/22697903
-  def has_nonnumber_type(df=None):
+  def has_nonnumber_type(self, df=None):
     for col in df.columns:
       if not is_numeric_dtype(df[col]):
         return True
