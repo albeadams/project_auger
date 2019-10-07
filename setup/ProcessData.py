@@ -8,7 +8,7 @@ from setup import DataMatrix as datamatrix
 class ProcessData(object):
 
   def __init__(self):
-    self.choice = None
+    pass
 
   # split data into training and testing
   def easy_split(self, df=None, test_size=0.2, random_state=42):
@@ -23,8 +23,14 @@ class ProcessData(object):
 
 
   # gives options on how to fix nulls; default removes rows
-  def fix_training_nulls(self, df=None, choice=1):
-    self.choice = choice
+  def fix_nulls(self, df=None, choice=1, training=True, replace_df=None):
+
+    if training == False and replace_df == None and (choice >= 4 and choice <= 8):
+      print("You must supply a replacement dataframe to fixing missing values.")
+      return -1
+    elif training == True and not replace_df == None:
+      print("You must set training=False if supplying a replacement dataframe")
+      return -1
 
     if choice == 1:
       # default is to drop rows; this helps if missing is non-numeric
@@ -34,19 +40,24 @@ class ProcessData(object):
     elif choice == 3: # fill with 0
       df.fillna(0, inplace=True)
     elif choice == 4:
-      replace_df = df.min()
+      if training:
+        replace_df = df.min()
       df.fillna(replace_df, inplace=True)
     elif choice == 5:
-      replace_df = df.max()
+      if training:
+        replace_df = df.max()
       df.fillna(replace_df, inplace=True)
     elif choice == 6:
-      replace_df = df.mean()
+      if training:
+        replace_df = df.mean()
       df.fillna(replace_df, inplace=True)
     elif choice == 7:
-      replace_df = df.median()
+      if training:
+        replace_df = df.median()
       df.fillna(replace_df, inplace=True)
     elif choice == 8:
-      replace_df = df.mode()
+      if training:
+        replace_df = df.mode()
       df.fillna(replace_df, inplace=True)
     elif choice == 9:
       df.ffill(axis=0, inplace=True)
@@ -58,13 +69,9 @@ class ProcessData(object):
     elif choice == 12:
       df.interpolate(method='linear', inplace=True)
     elif choice == 13:
-      try:
-        df.interpolate(method='time', inplace=True)
-      except ValueError:
-        print("Time interpolation only works with DateTimeIndex.")
-        return -1
-    elif choice == 14:
       df.interpolate(method='index', inplace=True)
 
-    return df, replace_df
-
+    if training:
+      return df, replace_df
+    else:
+      return df

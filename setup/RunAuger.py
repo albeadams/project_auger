@@ -37,26 +37,27 @@ class RunAuger(object):
       while True:
         try:
           choice = self.inp.get_input("Your choice: ")
-          if not (int(choice) > 3 or int(choice) < 1):
+          if not (int(choice) > 13 or int(choice) < 1):
             break
           else:
             self.inp.print_out("Try again. ", end='')
         except ValueError:
           self.inp.print_out("Not a number, try again.")
 
+      self.dm.choice = choice
 
       # get the train set, pass it and choice to fix_nulls, which returns the fixed df
       # and the result of the computation, i.e. if max was the choice, the result would return
-      # this numeric value
-      while True:
-        self.dm.train_copy, replace_df  = self.process.fix_training_nulls(self.dm.train_copy, choice)
-        if not result == -1:
-          break
-
-      self.dm.store_missing_value(replace_df, choice) # for future test set and other data, replace missing data
-        # NOTE: need to add new method to ProcessDAta that takes in the replace df and choice...
+      # this numeric value; training=True created the replace_df and returns; training=False requires
+      # the replace_df to be included in the call, doesn't return a replace_df
+      res = self.dm.train_copy, self.dm.replace_df  = self.process.fix_nulls(self.dm.train_copy, self.dm.choice, training=True)
+      if res == -1: 
+        print("Error in fixing training nulls")
+        exit() # shouldn't occur
     else:
-      print(info.nomissingfound)
-      #self.dm.store_missing_value(self.dm.train_copy, 0) # correct format for result?
+      print(info.no_missing_found)
+      self.dm.choice = 3 # all future set to 0 - change: should be able to specify
+
+    # HERE - go back, search for any columns with strings; if find, call ProcessData to discretize values...
 
 

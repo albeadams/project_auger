@@ -15,12 +15,11 @@ list_missing_values_options = """\n
       10. Backward fill
       11. Forward fill then backward fill
       12. Linear interpolation
-      13. Time interpolation
-      14. Index interpolation (use index values)
+      13. Index interpolation (use index values)
         (scipy interpoloation to come...)
       \n"""
 
 
-nomissingfound = """\n
+no_missing_found = """\n
   No missing data was found in the training set. Any missing data found
   in the test set, or any future data, will be set to zero.\n"""

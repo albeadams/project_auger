@@ -11,9 +11,8 @@ class DataMatrix(object):
     self.train_set = None
     self.test_set = None
     self.train_copy = None
-
-  def store_missing_values(self, df=None, choice=None):
-    pass
+    self.choice = None
+    self.replace_df = None # missing values
 
   def get_numpy_array(self):
     return self.df.to_numpy()
