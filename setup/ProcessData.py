@@ -8,7 +8,7 @@ from setup import DataMatrix as datamatrix
 class ProcessData(object):
 
   def __init__(self):
-    pass
+    self.choice = None
 
   # split data into training and testing
   def easy_split(self, df=None, test_size=0.2, random_state=42):
@@ -23,19 +23,48 @@ class ProcessData(object):
 
 
   # gives options on how to fix nulls; default removes rows
-  def fix_nulls(self, df=None, choice=1):
+  def fix_training_nulls(self, df=None, choice=1):
+    self.choice = choice
+
     if choice == 1:
-      # drops all rows with any np.nan, no matter column
-      df = df.dropna()
-    elif choice == 2:
-      # https://stackoverflow.com/questions/36226083/how-to-find-which-columns-contain-any-nan-value-in-pandas-dataframe-python
-      df = df.drop(df.loc[:, df.columns[df.insa().any()].tolist()], axis=1)
-    else:
-      print("HERE - give options on zero, mean, median... ")
- 
-    result = None # this will store the result of any computation, i.e. max, zero, etc.
+      # default is to drop rows; this helps if missing is non-numeric
+      df.dropna(axis=0, inplace=True)
+    elif choice == 2: # drop columns
+      df.dropna(axis=1, inplace=True)
+    elif choice == 3: # fill with 0
+      df.fillna(0, inplace=True)
+    elif choice == 4:
+      replace_df = df.min()
+      df.fillna(replace_df, inplace=True)
+    elif choice == 5:
+      replace_df = df.max()
+      df.fillna(replace_df, inplace=True)
+    elif choice == 6:
+      replace_df = df.mean()
+      df.fillna(replace_df, inplace=True)
+    elif choice == 7:
+      replace_df = df.median()
+      df.fillna(replace_df, inplace=True)
+    elif choice == 8:
+      replace_df = df.mode()
+      df.fillna(replace_df, inplace=True)
+    elif choice == 9:
+      df.ffill(axis=0, inplace=True)
+      # filling along column not supported
+    elif choice == 10:
+      df.bfill(axis=0, inplace=True)
+    elif choice == 11:
+      df.ffill(axis=0, inplace=True).bfill(axis=0, inplace=True)
+    elif choice == 12:
+      df.interpolate(method='linear', inplace=True)
+    elif choice == 13:
+      try:
+        df.interpolate(method='time', inplace=True)
+      except ValueError:
+        print("Time interpolation only works with DateTimeIndex.")
+        return -1
+    elif choice == 14:
+      df.interpolate(method='index', inplace=True)
 
-    return df, result
+    return df, replace_df
 
-    ### note, no matter the choice, it must be stored in the DataMatrix object
-    ### so that test set, and future data, can access this if they have missing data

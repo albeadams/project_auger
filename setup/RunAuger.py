@@ -33,7 +33,7 @@ class RunAuger(object):
 
     # choose how to replace nan values
     if self.process.check_for_nulls(self.dm.train_copy):
-      print(info.missingvalues)
+      print(info.list_missing_values_options)
       while True:
         try:
           choice = self.inp.get_input("Your choice: ")
@@ -44,15 +44,19 @@ class RunAuger(object):
         except ValueError:
           self.inp.print_out("Not a number, try again.")
 
-      if choice == 3:
-        print(info.replacewithoptions)
 
       # get the train set, pass it and choice to fix_nulls, which returns the fixed df
       # and the result of the computation, i.e. if max was the choice, the result would return
       # this numeric value
-      self.dm.store_missing_value(self.process.fix_nulls(self.dm.train_copy, choice), result)
+      while True:
+        self.dm.train_copy, replace_df  = self.process.fix_training_nulls(self.dm.train_copy, choice)
+        if not result == -1:
+          break
+
+      self.dm.store_missing_value(replace_df, choice) # for future test set and other data, replace missing data
+        # NOTE: need to add new method to ProcessDAta that takes in the replace df and choice...
     else:
       print(info.nomissingfound)
-      self.dm.store_missing_value(self.dm.train_copy, 0) # correct format for result?
+      #self.dm.store_missing_value(self.dm.train_copy, 0) # correct format for result?
 
 
