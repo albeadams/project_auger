@@ -17,6 +17,13 @@ class RunAuger(object):
 
   ### represents programs 'main' after dataset and learner(s) chosen ###
   def stage(self):
+
+    # checks if any columns not numeric, exit if so
+    if self.process.has_nonnumber_type(self.dm.df):
+      self.inp.print_out("Your data has non-numerical data.")
+      self.inp.print_out("Please provide only numerical data.")
+      exit()
+
     while True:
       hh = self.inp.get_input("Does your data have column headers? (y or n): ")
       if hh == 'y':
@@ -58,6 +65,5 @@ class RunAuger(object):
       print(info.no_missing_found)
       self.dm.choice = 3 # all future set to 0 - change: should be able to specify
 
-    # HERE - go back, search for any columns with strings; if find, call ProcessData to discretize values...
-
+    # HERE
 

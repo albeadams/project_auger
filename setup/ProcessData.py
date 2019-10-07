@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from pandas.api.types import is_numeric_dtype
 
 from sklearn.model_selection import train_test_split
 
@@ -9,6 +10,15 @@ class ProcessData(object):
 
   def __init__(self):
     pass
+
+
+  # returns True if a column contains a non-numeric type
+  # https://stackoverflow.com/questions/22697773/how-to-check-the-dtype-of-a-column-in-python-pandas/22697903
+  def has_nonnumber_type(df=None):
+    for col in df.columns:
+      if not is_numeric_dtype(df[col]):
+        return True
+    return False
 
   # split data into training and testing
   def easy_split(self, df=None, test_size=0.2, random_state=42):
