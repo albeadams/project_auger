@@ -20,4 +20,5 @@ class RunAuger(object):
     process = procdata.ProcessData()
     self.dm = process.prep_training_data(self.dm)
 
+    
 

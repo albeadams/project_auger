@@ -16,11 +16,6 @@ class ProcessData(object):
 
   def prep_training_data(self, dm=None):
     inp = inpt.Input()
-    # checks if any columns not numeric, exit if so; will build in process options for this later
-    if self.has_nonnumber_type(dm):
-      inp.print_out("Your data has non-numerical data.")
-      inp.print_out("Please provide only numerical data.")
-      exit()
 
     while True:
       hh = inp.get_input("Does your data have column headers? (y or n): ")
@@ -48,20 +43,22 @@ class ProcessData(object):
         except ValueError:
           inp.print_out("Not a number, try again.")
 
-      dm.choice = choice
+      dm.choice = int(choice)
       # get the train set, pass it and choice to fix_nulls, which returns the fixed df
       # and the result of the computation, i.e. if max was the choice, the result would return
       # this numeric value; training=True created the replace_df and returns; training=False requires
       # the replace_df to be included in the call for certain choices, doesn't return a replace_df
-      res = dm.train_copy, dm.replace_df  = self.fix_nulls(dm.train_copy, dm.choice, training=True)
-      if res == -1: 
-        print("Error in fixing training nulls")
-        exit() # shouldn't occur
+      dm.train_copy, dm.replace_df  = self.fix_nulls(dm.train_copy, dm.choice, training=True)
+
+      # checks if any columns not numeric, exit if so; will build in process options for this later
+      if self.has_nonnumber_type(dm.train_copy):
+        inp.print_out("Your data has non-numerical data.")
+        inp.print_out("Please provide only numerical data.")
+        exit()
+
     else:
       print(info.no_missing_found)
       dm.choice = 3 # all future set to 0 - change: should be able to specify
-    
-    # HERE ... other processing???
 
     return dm
 
@@ -73,6 +70,7 @@ class ProcessData(object):
       if not is_numeric_dtype(df[col]):
         return True
     return False
+
 
   # split data into training and testing
   def easy_split(self, df=None, test_size=0.2, random_state=42):
@@ -88,12 +86,11 @@ class ProcessData(object):
 
   # gives options on how to fix nulls; default removes rows
   def fix_nulls(self, df=None, choice=1, training=True, replace_df=None):
-
     if training == False and replace_df == None and (choice >= 4 and choice <= 8):
-      print("You must supply a replacement dataframe to fixing missing values.")
+      inp.print_out("You must supply a replacement dataframe to fixing missing values.")
       return -1
     elif training == True and not replace_df == None:
-      print("You must set training=False if supplying a replacement dataframe")
+      inp.print_out("You must set training=False if supplying a replacement dataframe")
       return -1
 
     if choice == 1:
