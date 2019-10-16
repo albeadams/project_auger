@@ -14,11 +14,13 @@ class RunAuger(object):
     self.dm = datamatrix.DataMatrix(directory, datafile)
 
 
-  ### represents programs 'main' after dataset and learner(s) chosen ###
   def stage(self):
-
+    '''
+        represents programs 'main' after dataset and learner(s) chosen;
+        processes can be created in order (pre-process, run through learners, test, etc.)
+    '''
     process = procdata.ProcessData()
-    self.dm = process.prep_training_data(self.dm)
+    process.prep_training_data(self.dm)
 
-    
+    #HERE
 
