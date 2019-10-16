@@ -30,6 +30,7 @@ class ProcessData(object):
     # split the dataframe in process, store it in datamatrxix
     dm.train_set, dm.test_set = self.easy_split(dm.df)
     dm.train_copy = dm.train_set.copy()
+
     # choose how to replace nan values
     if self.check_for_nulls(dm.train_copy):
       print(info.list_missing_values_options)
@@ -84,20 +85,33 @@ class ProcessData(object):
     return False
 
 
-  # gives options on how to fix nulls; default removes rows
+
   def fix_nulls(self, df=None, choice=1, training=True, replace_df=None):
-    if training == False and replace_df == None and (choice >= 4 and choice <= 8):
-      inp.print_out("You must supply a replacement dataframe to fixing missing values.")
-      return -1
-    elif training == True and not replace_df == None:
-      inp.print_out("You must set training=False if supplying a replacement dataframe")
+    """
+        gives options on how to fix nulls; default removes rows;
+        if training=True, this is a test dataset, or new data;
+        in that case, if using min, max, avg, median or most frequent,
+        must pass those values using replace_df, a dataframe
+        that should contain the replacement calculations for each column
+        regardless of whether or not they were missing in training set;
+        if choice=2 (remove column), replace_df must contain list of retained columns
+        and any missing values in these remaining columns will be set to 0 (TODO give option)
+    """
+
+    if training == False and replace_df == None and (choice == 2 or (choice >= 4 and choice <= 8)):
+      inp.print_out("You must supply a replacement dataframe to fix missing values.")
       return -1
 
     if choice == 1:
       # default is to drop rows; this helps if missing is non-numeric
       df.dropna(axis=0, inplace=True)
     elif choice == 2: # drop columns
-      df.dropna(axis=1, inplace=True)
+      if training:
+        df.dropna(axis=1, inplace=True)
+        replace_df = df.columns.values
+      else:
+        df= df[replace_df] # remove columns from test set
+        df.fillna(0, inplace=True) # default replace any nan left to 0
     elif choice == 3: # fill with 0
       df.fillna(0, inplace=True)
     elif choice == 4:
