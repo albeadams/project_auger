@@ -59,13 +59,12 @@ class ProcessData(object):
 
     else:
       print(info.no_missing_found)
-      dm.choice = 3 # all future set to 0 - change: should be able to specify
+      dm.choice = 3 # default to 0 - TODO: should be able to specify
 
     return dm
 
 
   # returns True if a column contains a non-numeric type
-  # https://stackoverflow.com/questions/22697773/how-to-check-the-dtype-of-a-column-in-python-pandas/22697903
   def has_nonnumber_type(self, df=None):
     for col in df.columns:
       if not is_numeric_dtype(df[col]):
@@ -83,7 +82,6 @@ class ProcessData(object):
     if df.isnull().values.any():
       return True
     return False
-
 
 
   def fix_nulls(self, df=None, choice=1, training=True, replace_df=None):
