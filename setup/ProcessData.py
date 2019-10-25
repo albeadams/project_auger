@@ -10,29 +10,36 @@ from setup import info
 
 class ProcessData(object):
 
-  def __init__(self):
-    pass
+  def __init__(self, dm):
+    self.dm = dm
 
 
-  def prep_training_data(self, dm=None):
+  def get_headers(self, df=None):
     inp = inpt.Input()
-
     while True:
       hh = inp.get_input("Does your data have column headers? (y or n): ")
       if hh == 'y':
-        dm.header = dm.df.columns.values
+        self.dm.header = df.columns.values
         break
       elif hh == 'n':
         break
       else:
         inp.print_out("Try again. Enter y for yes, n for no.")
 
-    # split the dataframe in process, store it in datamatrxix
-    dm.train_set, dm.test_set = self.easy_split(dm.df)
-    dm.train_copy = dm.train_set.copy()
 
+  def split_data(self, df=None, type='train_test_split', test_size=0.2, random_state=42):
+    # split the dataframe in process, store it in datamatrxix
+    if type == 'train_test_split':
+      self.dm.train_set, self.dm.test_set = train_test_split(df, test_size=test_size, random_state=random_state)
+      self.dm.train_copy = self.dm.train_set.copy()
+    else:
+      inp.print_out("Split type not supported yet")
+      exit()
+
+
+  def replace_nan(self, df=None):
     # choose how to replace nan values
-    if self.check_for_nulls(dm.train_copy):
+    if self.check_for_nulls(df):
       print(info.list_missing_values_options)
       while True:
         try:
@@ -44,24 +51,21 @@ class ProcessData(object):
         except ValueError:
           inp.print_out("Not a number, try again.")
 
-      dm.choice = int(choice)
+      self.dm.choice = int(choice)
       # get the train set, pass it and choice to fix_nulls, which returns the fixed df
       # and the result of the computation, i.e. if max was the choice, the result would return
       # this numeric value; training=True created the replace_df and returns; training=False requires
       # the replace_df to be included in the call for certain choices, doesn't return a replace_df
-      dm.train_copy, dm.replace_df  = self.fix_nulls(dm.train_copy, dm.choice, training=True)
+      self.dm.train_copy, self.dm.replace_df  = self.fix_nulls(df=df, choice=self.dm.choice, training=True)
 
       # checks if any columns not numeric, exit if so; will build in process options for this later
-      if self.has_nonnumber_type(dm.train_copy):
+      if self.has_nonnumber_type(df):
         inp.print_out("Your data has non-numerical data.")
         inp.print_out("Please provide only numerical data.")
         exit()
-
     else:
       print(info.no_missing_found)
-      dm.choice = 3 # default to 0 - TODO: should be able to specify
-
-    #return dm
+      self.dm.choice = 3 # default to 0 - TODO: should be able to specify
 
 
   # returns True if a column contains a non-numeric type
@@ -70,11 +74,6 @@ class ProcessData(object):
       if not is_numeric_dtype(df[col]):
         return True
     return False
-
-
-  # split data into training and testing
-  def easy_split(self, df=None, test_size=0.2, random_state=42):
-    return train_test_split(df, test_size=test_size, random_state=random_state)
 
 
   # return True if find nulls
@@ -148,3 +147,16 @@ class ProcessData(object):
       return df, replace_df
     else:
       return df
+
+
+  def create_bins(self, df=None):
+    '''
+      Checks for any non-integer columns, offers binning options; or drop column;
+      if drop, should reset columns in self.dm.df
+    '''
+    nonint_found = [type(col) for col in df]
+    for index, column in enumerate(nonint_found):
+      inp.print_out('found non-integer at col...')
+
+      #note: should also be able to manual specificy what columns to bin (i.e. is integer, but want to bin it)
+
