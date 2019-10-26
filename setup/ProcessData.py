@@ -5,67 +5,21 @@ from pandas.api.types import is_numeric_dtype
 from sklearn.model_selection import train_test_split
 
 from setup import DataMatrix as datamatrix
-from setup import Input as inpt
-from setup import info
+
 
 class ProcessData(object):
 
   def __init__(self, dm):
-    self.dm = dm
-
-
-  def get_headers(self, df=None):
-    inp = inpt.Input()
-    while True:
-      hh = inp.get_input("Does your data have column headers? (y or n): ")
-      if hh == 'y':
-        self.dm.header = df.columns.values
-        break
-      elif hh == 'n':
-        break
-      else:
-        inp.print_out("Try again. Enter y for yes, n for no.")
+    pass
 
 
   def split_data(self, df=None, type='train_test_split', test_size=0.2, random_state=42):
     # split the dataframe in process, store it in datamatrxix
     if type == 'train_test_split':
-      self.dm.train_set, self.dm.test_set = train_test_split(df, test_size=test_size, random_state=random_state)
-      self.dm.train_copy = self.dm.train_set.copy()
+      return train_test_split(df, test_size=test_size, random_state=random_state)
     else:
-      inp.print_out("Split type not supported yet")
-      exit()
-
-
-  def replace_nan(self, df=None):
-    # choose how to replace nan values
-    if self.check_for_nulls(df):
-      print(info.list_missing_values_options)
-      while True:
-        try:
-          choice = inp.get_input("Your choice: ")
-          if not (int(choice) > 13 or int(choice) < 1):
-            break
-          else:
-            inp.print_out("Try again. ", end='')
-        except ValueError:
-          inp.print_out("Not a number, try again.")
-
-      self.dm.choice = int(choice)
-      # get the train set, pass it and choice to fix_nulls, which returns the fixed df
-      # and the result of the computation, i.e. if max was the choice, the result would return
-      # this numeric value; training=True created the replace_df and returns; training=False requires
-      # the replace_df to be included in the call for certain choices, doesn't return a replace_df
-      self.dm.train_copy, self.dm.replace_df  = self.fix_nulls(df=df, choice=self.dm.choice, training=True)
-
-      # checks if any columns not numeric, exit if so; will build in process options for this later
-      if self.has_nonnumber_type(df):
-        inp.print_out("Your data has non-numerical data.")
-        inp.print_out("Please provide only numerical data.")
-        exit()
-    else:
-      print(info.no_missing_found)
-      self.dm.choice = 3 # default to 0 - TODO: should be able to specify
+      inp.print_out("Split type not supported")
+      return -1
 
 
   # returns True if a column contains a non-numeric type
@@ -157,6 +111,8 @@ class ProcessData(object):
     nonint_found = [type(col) for col in df]
     for index, column in enumerate(nonint_found):
       inp.print_out('found non-integer at col...')
+      # could use built in funciton has_nonnumber_type?
+      # move any input/output to RunAuger... this class should be portable with web
 
       #note: should also be able to manual specificy what columns to bin (i.e. is integer, but want to bin it)
 
