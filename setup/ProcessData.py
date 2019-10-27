@@ -6,7 +6,6 @@ from sklearn.model_selection import train_test_split
 
 from setup import DataMatrix as datamatrix
 
-
 class ProcessData(object):
 
   def __init__(self, dm):
@@ -40,7 +39,7 @@ class ProcessData(object):
   def fix_nulls(self, df=None, choice=1, training=True, replace_df=None):
     """
         gives options on how to fix nulls; default removes rows;
-        if training=True, this is a test dataset, or new data;
+        if training=False, this is a test dataset, or new data;
         in that case, if using min, max, avg, median or most frequent,
         must pass those values using replace_df, a dataframe
         that should contain the replacement calculations for each column
@@ -103,16 +102,21 @@ class ProcessData(object):
       return df
 
 
+  def show_sample(self, df=None):
+    inp.print_out(df.head())
+
+
   def create_bins(self, df=None):
     '''
       Checks for any non-integer columns, offers binning options; or drop column;
       if drop, should reset columns in self.dm.df
     '''
+    if not has_nonnumber_type(df):
+      inp.
     nonint_found = [type(col) for col in df]
     for index, column in enumerate(nonint_found):
-      inp.print_out('found non-integer at col...')
+      inp.print_out('found non-integer at column ')
       # could use built in funciton has_nonnumber_type?
-      # move any input/output to RunAuger... this class should be portable with web
-
+      
       #note: should also be able to manual specificy what columns to bin (i.e. is integer, but want to bin it)
 

@@ -16,14 +16,21 @@ class Input(object):
       space = space + extraspace
     print(space + outstr, end=end)
 
-  def get_input(self, inpstr=None):
+  def get_input(self, str='', yn=False, inpstr=None, errormsg=None):
     inpstr = '  '+inpstr
+    if errormsg == None:
+      errormsg = 'Wrong input'
+    errormsg = '  '+errormsg
     while True:
       response = input(inpstr)
-      if not response.split(' ')[0] == 'help':
-        return response
-      else:
+      if response.split(' ')[0] == 'help':
         self.help_me(response)
+      else:
+        if yn:
+          if response != 'y' && response != 'n':
+            print(errormsg)
+          else:
+            return response
 
 
   def help_me(self, response):
