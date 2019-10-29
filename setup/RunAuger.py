@@ -54,14 +54,19 @@ class RunAuger(object):
       inp.print_out('No non-integer columns found.')
       to_bin = inp.get_input('Do you still need to bin any columns? (y or n): ',
                             yn=True, errormsg=ERRORMSG_YN)
+    
     if to_bin == 'y':
       process.show_sample(local_df)
-      choice = inp.get_input('Select columns')  # need to provide numbered list of columns with sample
-      # will also automaticlaly force binning of non-integercolumns.. create_bins returns list of non-integer...?
-      column_choices = pick_columns(local_df)
-      process.create_bins(local_df) # if non-numeric data found
+      while True:
+        column_choice = inp.get_input('Select column (one at a time or n to end)')
+        if column_choice == 'n':
+          if process.has_nonnumber_type(local_df):
+            inp.print_out('You still have non-number columns, please select those for binning')
+          else:
+            break
+        else:
+          process.create_bins(local_df, column_choice)
 
 
-
-    #HERE
+    #at end, set train_copy
     self.dm.train_copy = local_df

@@ -103,16 +103,18 @@ class ProcessData(object):
 
 
   def show_sample(self, df=None):
+    # FIX: should print number, column name, maybe small sample horizontally
     inp.print_out(df.head())
 
 
-  def create_bins(self, df=None):
+  def create_bins(self, df=None, col=None):
     '''
-      Checks for any non-integer columns, offers binning options; or drop column;
-      if drop, should reset columns in self.dm.df
+      offers binning options; or drop column;
+      if drop, should reset columns in self.dm.df and replace_df
     '''
     if not has_nonnumber_type(df):
-      inp.
+      inp. #TODO: fix, this function offers binning options and the bins
+      # or another function offer binning options and then calls this function
     nonint_found = [type(col) for col in df]
     for index, column in enumerate(nonint_found):
       inp.print_out('found non-integer at column ')

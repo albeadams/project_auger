@@ -31,6 +31,8 @@ class Input(object):
             print(errormsg)
           else:
             return response
+        else:
+          return response
 
 
   def help_me(self, response):
