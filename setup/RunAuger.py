@@ -29,9 +29,9 @@ class RunAuger(object):
         self.dm.header = self.dm.df.columns.values
         
     #default is train_test_split, 0.2 test, 42 random
-    self.dm.train_set, self.dm.test_set = process.split_data(self.dm.df, type='train_test_split')
-    self.dm.train_copy = self.dm.train_set.copy()
-    local_df = self.dm.train_copy
+    self.dm.X_train, self.dm.X_test, self.dm.y_train, self.dm.y_test = process.split_data(self.dm.df, type='train_test_split')
+    self.dm.X_train_copy = self.dm.X_train.copy()
+    local_df = self.dm.X_train_copy
 
     if process.check_for_nulls(local_df):
       print(info.list_missing_values_options)
@@ -68,5 +68,5 @@ class RunAuger(object):
           process.create_bins(local_df, column_choice)
 
 
-    #at end, set train_copy
-    self.dm.train_copy = local_df
+    #at end, set X_train_copy
+    self.dm.X_train_copy = local_df

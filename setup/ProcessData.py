@@ -15,10 +15,12 @@ class ProcessData(object):
   def split_data(self, df=None, type='train_test_split', test_size=0.2, random_state=42):
     # split the dataframe in process, store it in datamatrxix
     if type == 'train_test_split':
-      return train_test_split(df, test_size=test_size, random_state=random_state)
+      X = df.iloc[:,:-1]
+      y = df.iloc[:,-1]
+      return train_test_split(X, y, test_size=test_size, random_state=random_state)
     else:
       inp.print_out("Split type not supported")
-      return -1
+      exit()
 
 
   # returns True if a column contains a non-numeric type
