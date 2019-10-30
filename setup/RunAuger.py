@@ -57,16 +57,26 @@ class RunAuger(object):
     
     if to_bin == 'y':
       process.show_sample(local_df)
-      while True:
-        column_choice = inp.get_input('Select column (one at a time or n to end)')
-        if column_choice == 'n':
+        column_choice = inp.get_input('Select column (one at a time, "done" when complete, "auto" to automate)')
+        if column_choice == 'done':
           if process.has_nonnumber_type(local_df):
-            inp.print_out('You still have non-number columns, please select those for binning')
+            inp.print_out('You still have non-number columns, please select those, or type "auto"')
           else:
             break
+        elif column_choice == 'auto':
+          process.create_bins(local_df, method='auto')
         else:
-          process.create_bins(local_df, column_choice)
+          try:
+            col = int(column_choice)
+            if col < 1 or col > len(local_df.columns):
+              inp.print_out('Number should be between 1 and max column ' + str(len(local_df.columns)))
+            else:
+              process.create_bins(local_df, col=col)
+          except ValueError:
+            inp.print_out('Not a column number, should be between 1 and max column ' + str(len(local_df.columns)))
 
+
+    #normalize options...
 
     #at end, set X_train_copy
     self.dm.X_train_copy = local_df

@@ -109,11 +109,16 @@ class ProcessData(object):
     inp.print_out(df.head())
 
 
-  def create_bins(self, df=None, col=None):
+  def create_bins(self, df=None, method=None, col=None):
     '''
       offers binning options; or drop column;
       if drop, should reset columns in self.dm.df and replace_df
     '''
+    if method == 'auto':
+      #for each column not a number, bin...
+
+    # if not auto, use col value...
+
     if not has_nonnumber_type(df):
       inp. #TODO: fix, this function offers binning options and the bins
       # or another function offer binning options and then calls this function
