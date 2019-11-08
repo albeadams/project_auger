@@ -114,18 +114,18 @@ class ProcessData(object):
       offers binning options; or drop column;
       if drop, should reset columns in self.dm.df and replace_df
     '''
-    if method == 'auto':
+    #if method == 'auto':
       #for each column not a number, bin...
 
     # if not auto, use col value...
 
-    if not has_nonnumber_type(df):
-      inp. #TODO: fix, this function offers binning options and the bins
+    #if not has_nonnumber_type(df):
+    #  inp. #TODO: fix, this function offers binning options and the bins
       # or another function offer binning options and then calls this function
-    nonint_found = [type(col) for col in df]
-    for index, column in enumerate(nonint_found):
-      inp.print_out('found non-integer at column ')
+    #nonint_found = [type(col) for col in df]
+    #for index, column in enumerate(nonint_found):
+    #  inp.print_out('found non-integer at column ')
       # could use built in funciton has_nonnumber_type?
       
       #note: should also be able to manual specificy what columns to bin (i.e. is integer, but want to bin it)
-
+    pass

@@ -19,11 +19,11 @@ class Setup(object):
     chosen_dataset = self.getdatasets_input()
     chosen_learners = self.getlearner_input()
     dataset, learners = self.parse_options(chosen_dataset, chosen_learners)
-    self.inp.print_out("Chosen data set: ")
+    self.inp.print_out("\nChosen data set: ")
     self.inp.print_out(dataset, extraspace='    ')
-    self.inp.print_out("Chosen learners: ")
+    self.inp.print_out("\nChosen learners: ")
     self.inp.print_out(str(learners), extraspace='    ')
-    self.inp.print_out('At any time, type \'help\' to get help.')
+    self.inp.print_out('\nAt any time, type \'help\' to get help\n.')
     ra = setup.RunAuger(DATADIR, dataset, learners)
     ra.stage()
 
@@ -33,17 +33,12 @@ class Setup(object):
       Welcome to Project Auger!\n
       Project Auguer is ML learning tool
       that allows you to select a dataset and ML model(s),
-      mash them together, and spit out awesome results
-      that will fundamentally alter the course of humanity.
-      Or make your head spin enough that you go back and study art history.
-      We all want to avoid art history, so PAY ATTENTION!!!
-
-      Please select the dataset you wish to cram into our models.
+      mash them together, and spit out awesome results.\n
+      It's also intended as a learning tool.
+      At any time, type 'help' for assistance.\n
       Note that any dataset you wish to use:
         a. must exist in the project_auger /data directory (no subdirs)
-        b. must be a .csv file
-
-      Without further ado, here are the datasets!!!\n""")
+        b. must be a .csv file\n\n""")
 
 
   def getdatasets_input(self):
@@ -60,7 +55,7 @@ class Setup(object):
       except ValueError:
         self.inp.print_out("Not a number, try again.")
     datasetname = self.get_dataset_name(choice)
-    self.inp.print_out("You chose: " + datasetname + "\n\n  Awesome choice!\n")
+    self.inp.print_out("\n  You chose: '" + datasetname + "'.  Awesome choice!\n")
     return choice
 
 

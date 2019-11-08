@@ -1,7 +1,7 @@
 import learners
 from setup import DataMatrix as datamatrix
 from setup import ProcessData as procdata
-from setup import Input as inp
+from setup import Input as inpt
 from setup import info
 
 ERRORMSG_YN = 'Try again. Enter y for yes, n for no.'
@@ -24,7 +24,7 @@ class RunAuger(object):
     inp = inpt.Input()
     process = procdata.ProcessData(self.dm)
 
-    if inp.get_input(str='Does your data have column headers? (y or n): ',
+    if inp.get_input(strn='Does your data have column headers? (y or n): ',
                       yn=True, errormsg=ERRORMSG_YN) == 'y':
         self.dm.header = self.dm.df.columns.values
         
@@ -57,6 +57,7 @@ class RunAuger(object):
     
     if to_bin == 'y':
       process.show_sample(local_df)
+      while True:
         column_choice = inp.get_input('Select column (one at a time, "done" when complete, "auto" to automate)')
         if column_choice == 'done':
           if process.has_nonnumber_type(local_df):
@@ -65,6 +66,7 @@ class RunAuger(object):
             break
         elif column_choice == 'auto':
           process.create_bins(local_df, method='auto')
+          break
         else:
           try:
             col = int(column_choice)

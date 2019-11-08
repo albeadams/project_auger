@@ -16,8 +16,8 @@ class Input(object):
       space = space + extraspace
     print(space + outstr, end=end)
 
-  def get_input(self, str='', yn=False, inpstr=None, errormsg=None):
-    inpstr = '  '+inpstr
+  def get_input(self, strn='', yn=False, errormsg=None):
+    inpstr = '>> '+strn
     if errormsg == None:
       errormsg = 'Wrong input'
     errormsg = '  '+errormsg
@@ -27,7 +27,7 @@ class Input(object):
         self.help_me(response)
       else:
         if yn:
-          if response != 'y' && response != 'n':
+          if response != 'y' and response != 'n':
             print(errormsg)
           else:
             return response
