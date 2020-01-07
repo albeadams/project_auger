@@ -23,6 +23,7 @@ class CreditRating(object):
 
     m = Model.Model(df)
     m.process()
+    m.fit()
 
 
 if __name__ == '__main__':
